@@ -12,27 +12,41 @@ import (
 )
 
 func main() {
+	// Loads the .env file into the enviroment
 	godotenv.Load()
+
+	// Pulls the database url from the environment
 	dbURL := os.Getenv("DB_URL")
 
+	// Opens a DB connection
 	db, err := sql.Open("postgres", dbURL)
 	if err != nil {
 		fmt.Println("Failed to open database")
 		os.Exit(1)
 	}
 
+	// Creates config object
 	cfg := api.ApiConfig{}
+
+	// Starts query engine and adds it to config
 	dbQueries := database.New(db)
 	cfg.DBConn = dbQueries
+
+	// Creates a new serve mux instance
 	sMux := http.NewServeMux()
-	handler := http.FileServer(http.Dir("."))
+
+	// Creates server instance
 	server := http.Server{
 		Handler: sMux,
 		Addr:    ":8080",
 	}
 
-	sMux.Handle("/app/", handler)
+	// Registers function handlers for POST methods
 	sMux.HandleFunc("POST /users", cfg.POSTUsers)
 
+	// Registers function handlers for GET methods
+	sMux.HandleFunc("GET /users", cfg.GETUsers)
+
+	// Runs the server loop
 	server.ListenAndServe()
 }

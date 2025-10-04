@@ -58,3 +58,8 @@ func (cfg *ApiConfig) POSTUsers(writer http.ResponseWriter, req *http.Request) {
 	writer.WriteHeader(http.StatusAccepted)
 	writer.Write(outputJson)
 }
+
+func (cfg *ApiConfig) GETUsers(writer http.ResponseWriter, req *http.Request) {
+	writer.Header().Set("Content-Type", "application/json")
+	http.Error(writer, "Not implemented yet", http.StatusNotImplemented)
+}
