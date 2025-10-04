@@ -31,6 +31,7 @@ func main() {
 	// Starts query engine and adds it to config
 	dbQueries := database.New(db)
 	cfg.DBConn = dbQueries
+	cfg.Secret = os.Getenv("JWT_SECRET")
 
 	// Creates a new serve mux instance
 	sMux := http.NewServeMux()
@@ -43,6 +44,8 @@ func main() {
 
 	// Registers function handlers for POST methods
 	sMux.HandleFunc("POST /users", cfg.POSTUsers)
+	sMux.HandleFunc("POST /reset", cfg.POSTReset)
+	sMux.HandleFunc("POST /login", cfg.POSTLogin)
 
 	// Registers function handlers for GET methods
 	sMux.HandleFunc("GET /users", cfg.GETUsers)

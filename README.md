@@ -7,6 +7,7 @@ This documentation is just a roadmap for how I plan to build the project, and wi
 ## Endpoints
 ### Status
 - [x] /users POST
+- [x] /login POST
 - [ ] /users GET
 - [ ] /users PUT
 - [ ] /books POST
@@ -18,7 +19,13 @@ This documentation is just a roadmap for how I plan to build the project, and wi
 
 Endpoint for registering a new user by email
 
-```JSON format: {"email":"YOUREMAIL"}```
+##### Request body format:
+```
+{
+    "email":"YOUREMAIL", 
+    "password":"YOURPASSWORD"
+}
+```
 
 #### /users GET
 
@@ -27,6 +34,18 @@ Endpoint to retrieve user information
 #### /users PUT
 
 Endpoint to change user information
+
+#### /login POST
+
+Endpoint for logging into an existing user profile; returns an access token
+
+##### Request body format:
+```
+{
+    "email":"YOUREMAIL",
+    "password":"YOURPASSWORD"
+}
+```
 
 #### /books POST 
 
@@ -42,12 +61,13 @@ Endpoint to change user progress in a book
 
 ## Database Schema
 ### Users table
-| Field      | Data Type | Nullable |
-|------------|:----------|:--------:|
-|id          |UUID       | No       |
-|email       |Text       | No       |
-|created_at  |Timestamp  | No       |
-|updated_at  |Timestamp  | No       |
+| Field          | Data Type | Nullable |
+|----------------|:----------|:--------:|
+|id              |UUID       | No       |
+|email           |Text       | No       |
+|hashed_password |Text       | No       |
+|created_at      |Timestamp  | No       |
+|updated_at      |Timestamp  | No       |
 
 ### Books table
 | Field      | Data Type | Nullable |

@@ -3,7 +3,9 @@ package api
 import (
 	"encoding/json"
 	"github.com/google/uuid"
+	"github.com/roxensox/dailychapter/internal/auth"
 	"github.com/roxensox/dailychapter/internal/database"
+	"github.com/roxensox/dailychapter/internal/utils"
 	"net/http"
 	"time"
 )
@@ -16,17 +18,25 @@ func (cfg *ApiConfig) POSTUsers(writer http.ResponseWriter, req *http.Request) {
 
 	// Instantiates a custom struct to receive input
 	rcv := struct {
-		Email string `json:"email"`
+		Email    string `json:"email"`
+		Password string `json:"password"`
 	}{}
 	decoder := json.NewDecoder(req.Body)
 	decoder.Decode(&rcv)
+	if !utils.ValidateEmail(rcv.Email) {
+		http.Error(writer, "Invalid email", http.StatusBadRequest)
+		return
+	}
+
+	hashPass, err := auth.HashPassword(rcv.Password)
 
 	// Creates parameter object for query
 	params := database.CreateUserParams{
-		Email:     rcv.Email,
-		ID:        uuid.New(),
-		CreatedAt: time.Now().UTC(),
-		UpdatedAt: time.Now().UTC(),
+		Email:          rcv.Email,
+		ID:             uuid.New(),
+		HashedPassword: hashPass,
+		CreatedAt:      time.Now().UTC(),
+		UpdatedAt:      time.Now().UTC(),
 	}
 
 	// Runs the query, rejects duplicate users
