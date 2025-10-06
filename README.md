@@ -75,9 +75,17 @@ Endpoint to change user progress in a book
 |id          |UUID       | No       |
 |created_at  |Timestamp  | No       |
 |updated_at  |Timestamp  | No       |
-|book_id     |UUID       | No       |
 |chapters    |Integer    | No       |
 |title       |Text       | No       |
+|author      |UUID       | No       |
+
+### Authors table
+| Field      | Data Type | Nullable |
+|------------|:----------|:--------:|
+|id          |UUID       | No       |
+|created_at  |Timestamp  | No       |
+|updated_at  |Timestamp  | No       |
+|name        |Text       | No       |
 
 ### Chapters table
 | Field      | Data Type | Nullable |
