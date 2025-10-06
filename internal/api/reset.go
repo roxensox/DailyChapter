@@ -10,5 +10,10 @@ func (cfg *ApiConfig) POSTReset(writer http.ResponseWriter, req *http.Request) {
 		http.Error(writer, "Failed to reset DB", http.StatusInternalServerError)
 		return
 	}
+	err = cfg.DBConn.ResetBooks(req.Context())
+	if err != nil {
+		http.Error(writer, "Failed to reset DB", http.StatusInternalServerError)
+		return
+	}
 	writer.WriteHeader(204)
 }

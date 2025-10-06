@@ -12,3 +12,10 @@ INSERT INTO books (
 	$4,
 	$5
 ) RETURNING *;
+
+-- name: GetBooks :many
+SELECT title, pub_date
+FROM books;
+
+-- name: ResetBooks :exec
+DELETE FROM books;

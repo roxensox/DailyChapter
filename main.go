@@ -32,6 +32,7 @@ func main() {
 	dbQueries := database.New(db)
 	cfg.DBConn = dbQueries
 	cfg.Secret = os.Getenv("JWT_SECRET")
+	cfg.APIKey = os.Getenv("API_KEY")
 
 	// Creates a new serve mux instance
 	sMux := http.NewServeMux()
@@ -50,6 +51,7 @@ func main() {
 
 	// Registers function handlers for GET methods
 	sMux.HandleFunc("GET /users", cfg.GETUsers)
+	sMux.HandleFunc("GET /books", cfg.GETBooks)
 
 	// Runs the server loop
 	server.ListenAndServe()

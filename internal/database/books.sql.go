@@ -55,3 +55,45 @@ func (q *Queries) CreateBook(ctx context.Context, arg CreateBookParams) (Book, e
 	)
 	return i, err
 }
+
+const getBooks = `-- name: GetBooks :many
+SELECT title, pub_date
+FROM books
+`
+
+type GetBooksRow struct {
+	Title   string
+	PubDate sql.NullTime
+}
+
+func (q *Queries) GetBooks(ctx context.Context) ([]GetBooksRow, error) {
+	rows, err := q.db.QueryContext(ctx, getBooks)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetBooksRow
+	for rows.Next() {
+		var i GetBooksRow
+		if err := rows.Scan(&i.Title, &i.PubDate); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const resetBooks = `-- name: ResetBooks :exec
+DELETE FROM books
+`
+
+func (q *Queries) ResetBooks(ctx context.Context) error {
+	_, err := q.db.ExecContext(ctx, resetBooks)
+	return err
+}

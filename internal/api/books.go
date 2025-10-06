@@ -3,39 +3,46 @@ package api
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
+	"net/http"
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/roxensox/dailychapter/internal/auth"
 	"github.com/roxensox/dailychapter/internal/database"
-	"net/http"
-	"time"
+	"github.com/roxensox/dailychapter/internal/utils"
 )
 
 func (cfg *ApiConfig) POSTBooks(writer http.ResponseWriter, req *http.Request) {
+	// Gets APIKey from the header and checks it against config
 	apiKey, err := auth.GetAPIKey(req.Header)
 	if err != nil || apiKey != cfg.APIKey {
-		http.Error(writer, "Invalid API Key", http.StatusUnauthorized)
+		http.Error(writer, fmt.Sprintf("Invalid API Key: %s", apiKey), http.StatusUnauthorized)
 		return
 	}
+
+	// Prepares struct instance to receive request body
 	rcv := struct {
-		Title   string    `json:"title"`
-		PubDate time.Time `json:"pub_date"`
+		Title   string `json:"title"`
+		PubDate string `json:"pub_date"`
 	}{}
 
+	// Decodes body into rcv
 	decoder := json.NewDecoder(req.Body)
 	decoder.Decode(&rcv)
 
-	if err != nil {
-		http.Error(writer, "Unable to parse date", http.StatusInternalServerError)
-		return
-	}
+	parsedDate, err := utils.ParseDate(rcv.PubDate)
 
+	// Initializes nulltime for query parameter
 	pDate := sql.NullTime{}
 
-	if rcv.PubDate.IsZero() {
-		pDate.Time = rcv.PubDate
+	// Sets up nulltime if no date was found
+	if err == nil {
+		pDate.Time = parsedDate
 		pDate.Valid = true
 	}
 
+	// Sets up parameters
 	params := database.CreateBookParams{
 		ID:        uuid.New(),
 		CreatedAt: time.Now().UTC(),
@@ -44,5 +51,54 @@ func (cfg *ApiConfig) POSTBooks(writer http.ResponseWriter, req *http.Request) {
 		PubDate:   pDate,
 	}
 
-	cfg.DBConn.CreateBook(req.Context(), params)
+	// Adds the book to the DB
+	_, err = cfg.DBConn.CreateBook(req.Context(), params)
+	if err != nil {
+		http.Error(writer, "Failed to add book", http.StatusInternalServerError)
+		return
+	}
+	writer.WriteHeader(200)
+}
+
+func (cfg *ApiConfig) GETBooks(writer http.ResponseWriter, req *http.Request) {
+	// Handler for the /books endpoint, returns all books
+
+	// Sets response content type to json
+	writer.Header().Set("Content-Type", "application/json")
+
+	// Queries the DB for all books
+	results, err := cfg.DBConn.GetBooks(req.Context())
+	if err != nil || len(results) == 0 {
+		http.Error(writer, "No books found.", http.StatusNotFound)
+		return
+	}
+
+	// Prepares a custom object for output
+	out := []struct {
+		Title   string    `json:"title"`
+		PubDate time.Time `json:"pub_date"`
+	}{}
+
+	// Loops through results and parses them into output object
+	for _, book := range results {
+		curr_struct := struct {
+			Title   string    `json:"title"`
+			PubDate time.Time `json:"pub_date"`
+		}{
+			Title:   book.Title,
+			PubDate: book.PubDate.Time,
+		}
+		out = append(out, curr_struct)
+	}
+
+	// Marshals output to json
+	jsonOut, err := json.Marshal(out)
+	if err != nil {
+		http.Error(writer, "Failed to marshal data.", http.StatusInternalServerError)
+		return
+	}
+
+	// Writes success response
+	writer.WriteHeader(200)
+	writer.Write(jsonOut)
 }
