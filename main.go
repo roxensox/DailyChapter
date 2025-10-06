@@ -46,6 +46,7 @@ func main() {
 	sMux.HandleFunc("POST /users", cfg.POSTUsers)
 	sMux.HandleFunc("POST /reset", cfg.POSTReset)
 	sMux.HandleFunc("POST /login", cfg.POSTLogin)
+	sMux.HandleFunc("POST /books", cfg.POSTBooks)
 
 	// Registers function handlers for GET methods
 	sMux.HandleFunc("GET /users", cfg.GETUsers)

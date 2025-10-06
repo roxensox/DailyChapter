@@ -7,4 +7,5 @@ import (
 type ApiConfig struct {
 	DBConn *database.Queries
 	Secret string
+	APIKey string
 }
