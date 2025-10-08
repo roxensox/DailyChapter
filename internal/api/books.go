@@ -104,4 +104,42 @@ func (cfg *ApiConfig) GETBooks(writer http.ResponseWriter, req *http.Request) {
 }
 
 func (cfg *ApiConfig) POSTBooksIDSubscribe(writer http.ResponseWriter, req *http.Request) {
+
+	writer.Header().Set("Content-Type", "application/json")
+
+	book_id := req.PathValue("bookID")
+	book_uuid, err := uuid.Parse(book_id)
+	if err != nil {
+		fmt.Printf("Invalid book ID: %s\n\t%v\n", book_id, err)
+		http.Error(writer, "Invalid book ID", http.StatusBadRequest)
+		return
+	}
+
+	token, err := auth.GetJWT(req.Header)
+	if err != nil {
+		fmt.Printf("Failed to retrieve JWT\n\t%v\n", err)
+		http.Error(writer, "JWT not found", http.StatusBadRequest)
+		return
+	}
+	uid, err := auth.ValidateJWT(token, cfg.PublicKey)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(writer, "Invalid token", http.StatusUnauthorized)
+		return
+	}
+
+	params := database.SubscribeParams{
+		ID:        uuid.New(),
+		CreatedAt: time.Now().UTC(),
+		UpdatedAt: time.Now().UTC(),
+		UserID:    uid,
+		BookID:    book_uuid,
+	}
+	err = cfg.DBConn.Subscribe(req.Context(), params)
+	if err != nil {
+		http.Error(writer, "Failed to execute query", http.StatusInternalServerError)
+		fmt.Println(err)
+		return
+	}
+	writer.WriteHeader(204)
 }

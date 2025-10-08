@@ -9,6 +9,7 @@ import (
 type ApiConfig struct {
 	DBConn     *database.Queries
 	PrivateKey *rsa.PrivateKey
+	PublicKey  *rsa.PublicKey
 	Secret     string
 	APIKey     string
 }

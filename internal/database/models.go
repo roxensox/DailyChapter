@@ -26,3 +26,11 @@ type User struct {
 	UpdatedAt      time.Time
 	HashedPassword string
 }
+
+type Userbook struct {
+	ID        uuid.UUID
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	UserID    uuid.UUID
+	BookID    uuid.UUID
+}

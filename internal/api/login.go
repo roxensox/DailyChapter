@@ -8,7 +8,10 @@ import (
 )
 
 func (cfg *ApiConfig) POSTLogin(writer http.ResponseWriter, req *http.Request) {
+	// Handles POST request to /login endpoint
+
 	writer.Header().Set("Content-Type", "application/json")
+
 	rcv := struct {
 		Email    string `json:"email"`
 		Password string `json:"password"`
@@ -19,6 +22,12 @@ func (cfg *ApiConfig) POSTLogin(writer http.ResponseWriter, req *http.Request) {
 		http.Error(writer, "User not found", http.StatusNotFound)
 		return
 	}
+
+	if rcv.Password == "" {
+		http.Error(writer, "Must provide a password", http.StatusBadRequest)
+		return
+	}
+
 	match, err := auth.CheckPasswordHash(rcv.Password, resp.HashedPassword)
 	if err != nil {
 		http.Error(writer, "Failed to check password", http.StatusInternalServerError)

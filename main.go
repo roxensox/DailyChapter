@@ -36,6 +36,7 @@ func main() {
 	cfg.Secret = os.Getenv("JWT_SECRET")
 	cfg.APIKey = os.Getenv("API_KEY")
 	cfg.PrivateKey = utils.GetPrivateKey()
+	cfg.PublicKey = utils.GetPublicKey()
 
 	// Creates a new serve mux instance
 	sMux := http.NewServeMux()

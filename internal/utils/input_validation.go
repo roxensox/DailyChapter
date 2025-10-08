@@ -7,6 +7,14 @@ import (
 )
 
 func ValidateEmail(email string) bool {
+	// Takes in an email string and checks if it's a valid address (needs improvement)
+
+	// Returns false immediately if the email was left blank
+	if email == "" {
+		return false
+	}
+
+	// Slice of valid domain extensions
 	validDomains := []string{
 		"com",
 		"gov",
@@ -14,13 +22,14 @@ func ValidateEmail(email string) bool {
 		"edu",
 		"io",
 	}
-	if email == "" {
-		return false
-	}
+
+	// Splits the email string by the @
 	sections := strings.Split(email, "@")
 	if len(sections) != 2 {
 		return false
 	}
+
+	// Spits the latter section by the "." to get the domain name
 	domain := strings.Split(sections[1], ".")
 	if !slices.Contains(validDomains, domain[len(domain)-1]) {
 		return false
