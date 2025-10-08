@@ -8,10 +8,11 @@ This documentation is just a roadmap for how I plan to build the project, and wi
 ### Status
 - [x] /users POST
 - [x] /login POST
+- [x] /books POST
+- [x] /books/{bookID}/subscribe POST
+- [x] /books GET
 - [ ] /users GET
 - [ ] /users PUT
-- [ ] /books POST
-- [ ] /books GET
 - [ ] /books PUT
 
 ### Endpoint Descriptions
@@ -20,7 +21,7 @@ This documentation is just a roadmap for how I plan to build the project, and wi
 Endpoint for registering a new user by email
 
 ##### Request body format:
-```
+```json
 {
     "email":"YOUREMAIL", 
     "password":"YOURPASSWORD"
@@ -40,10 +41,17 @@ Endpoint to change user information
 Endpoint for logging into an existing user profile; returns an access token
 
 ##### Request body format:
-```
+<u>Header must include an API Key</u>
+```json
 {
     "email":"YOUREMAIL",
     "password":"YOURPASSWORD"
+}
+```
+##### Response body format:
+```json
+{
+    "Token":"JWTSTRING"
 }
 ```
 
@@ -51,16 +59,50 @@ Endpoint for logging into an existing user profile; returns an access token
 
 Endpoint to add a new book to the library (will be exclusive to webhook with external service)
 
+##### Request body format:
+```json
+{
+    "title":"BOOK TITLE",
+    "pub_date":"01/23/1999"
+}
+```
+
+#### /books/{bookID}/subscribe POST 
+
+<u>Request must include a valid access token</u> (user needs to be logged in)
+
+##### Request body format:
+
+No body required.
+
 #### /books GET
 
 Endpoint to get book information
+
+##### Request body format:
+
+No body required
+
+##### Response body format:
+
+```json
+[
+    {
+        "title":"BOOKTITLE",
+        "pub_date":"PUBLISHING DATE"
+    }
+]
+```
 
 #### /books PUT
 
 Endpoint to change user progress in a book
 
 ## Database Schema
+
 ### Users table
+- [x] Fully Implemented
+
 | Field          | Data Type | Nullable |
 |----------------|:----------|:--------:|
 |id              |UUID       | No       |
@@ -70,6 +112,8 @@ Endpoint to change user progress in a book
 |updated_at      |Timestamp  | No       |
 
 ### Books table
+- [x] Fully Implemented
+
 | Field      | Data Type | Nullable |
 |------------|:----------|:--------:|
 |id          |UUID       | No       |
@@ -80,6 +124,8 @@ Endpoint to change user progress in a book
 |author      |UUID       | No       |
 
 ### Authors table
+- [ ] Fully Implemented
+
 | Field      | Data Type | Nullable |
 |------------|:----------|:--------:|
 |id          |UUID       | No       |
@@ -88,6 +134,8 @@ Endpoint to change user progress in a book
 |name        |Text       | No       |
 
 ### Chapters table
+- [ ] Fully Implemented
+
 | Field      | Data Type | Nullable |
 |------------|:----------|:--------:|
 |id          |UUID       | No       |
@@ -97,6 +145,8 @@ Endpoint to change user progress in a book
 |content     |Text       | No       |
 
 ### UserBooks table
+- [ ] Fully Implemented
+
 | Field      | Data Type | Nullable |
 |------------|:----------|:--------:|
 |id          |UUID       | No       |
