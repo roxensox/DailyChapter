@@ -102,3 +102,6 @@ func (cfg *ApiConfig) GETBooks(writer http.ResponseWriter, req *http.Request) {
 	writer.WriteHeader(200)
 	writer.Write(jsonOut)
 }
+
+func (cfg *ApiConfig) POSTBooksIDSubscribe(writer http.ResponseWriter, req *http.Request) {
+}

@@ -28,7 +28,7 @@ func (cfg *ApiConfig) POSTLogin(writer http.ResponseWriter, req *http.Request) {
 		http.Error(writer, "Incorrect password", http.StatusUnauthorized)
 		return
 	}
-	token, err := auth.MakeJWT(resp.ID, cfg.Secret, time.Hour)
+	token, err := auth.MakeJWT(resp.ID, cfg.PrivateKey, time.Hour)
 	if err != nil {
 		http.Error(writer, "Failed to generate token", http.StatusInternalServerError)
 		return

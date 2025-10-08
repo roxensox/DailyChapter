@@ -3,12 +3,14 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"net/http"
+	"os"
+
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"github.com/roxensox/dailychapter/internal/api"
 	"github.com/roxensox/dailychapter/internal/database"
-	"net/http"
-	"os"
+	"github.com/roxensox/dailychapter/internal/utils"
 )
 
 func main() {
@@ -33,6 +35,7 @@ func main() {
 	cfg.DBConn = dbQueries
 	cfg.Secret = os.Getenv("JWT_SECRET")
 	cfg.APIKey = os.Getenv("API_KEY")
+	cfg.PrivateKey = utils.GetPrivateKey()
 
 	// Creates a new serve mux instance
 	sMux := http.NewServeMux()
@@ -48,6 +51,7 @@ func main() {
 	sMux.HandleFunc("POST /reset", cfg.POSTReset)
 	sMux.HandleFunc("POST /login", cfg.POSTLogin)
 	sMux.HandleFunc("POST /books", cfg.POSTBooks)
+	sMux.HandleFunc("POST /books/{bookID}/subscribe", cfg.POSTBooksIDSubscribe)
 
 	// Registers function handlers for GET methods
 	sMux.HandleFunc("GET /users", cfg.GETUsers)
