@@ -121,10 +121,9 @@ Endpoint to change user progress in a book
 |updated_at  |Timestamp  | No       |
 |chapters    |Integer    | No       |
 |title       |Text       | No       |
-|author      |UUID       | No       |
 
 ### Authors table
-- [ ] Fully Implemented
+- [x] Fully Implemented
 
 | Field      | Data Type | Nullable |
 |------------|:----------|:--------:|
