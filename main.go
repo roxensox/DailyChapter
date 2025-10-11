@@ -50,7 +50,7 @@ func main() {
 	// Registers function handlers for POST methods
 	sMux.HandleFunc("POST /users", cfg.POSTUsers)
 	sMux.HandleFunc("POST /reset", cfg.POSTReset)
-	sMux.HandleFunc("POST /login", cfg.POSTLogin)
+	sMux.HandleFunc("POST /login", cfg.POSTLogin) // FIXME:
 	sMux.HandleFunc("POST /books", cfg.POSTBooks)
 	sMux.HandleFunc("POST /books/{bookID}/subscribe", cfg.POSTBooksIDSubscribe)
 	sMux.HandleFunc("POST /refresh", cfg.POSTRefresh)

@@ -35,9 +35,9 @@ func (cfg *ApiConfig) POSTRefresh(writer http.ResponseWriter, req *http.Request)
 	}
 
 	outObj := struct {
-		token string `json:"token"`
+		Token string `json:"token"`
 	}{
-		token: out,
+		Token: out,
 	}
 	outJson, err := json.Marshal(outObj)
 	if err != nil {

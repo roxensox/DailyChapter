@@ -9,6 +9,9 @@ import (
 
 func (cfg *ApiConfig) POSTLogin(writer http.ResponseWriter, req *http.Request) {
 	// Handles POST request to /login endpoint
+	//TODO: If a refresh token was provided, check if it's valid. If it isn't,
+	//	revoke any active refresh token for this user and create a new one, return
+	//	the new refresh token and access token.
 
 	writer.Header().Set("Content-Type", "application/json")
 
@@ -37,15 +40,16 @@ func (cfg *ApiConfig) POSTLogin(writer http.ResponseWriter, req *http.Request) {
 		http.Error(writer, "Incorrect password", http.StatusUnauthorized)
 		return
 	}
-	token, err := auth.MakeJWT(resp.ID, cfg.PrivateKey, time.Hour)
+	access_token, err := auth.MakeJWT(resp.ID, cfg.PrivateKey, time.Hour)
 	if err != nil {
 		http.Error(writer, "Failed to generate token", http.StatusInternalServerError)
 		return
 	}
 	out := struct {
-		Token string `json:"token"`
+		RefreshToken string `json:"refresh_token"`
+		AccessToken  string `json:"access_token"`
 	}{
-		Token: token,
+		AccessToken: access_token,
 	}
 	outJson, err := json.Marshal(out)
 	if err != nil {
