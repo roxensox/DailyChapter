@@ -11,12 +11,29 @@ import (
 	"github.com/google/uuid"
 )
 
+type Author struct {
+	ID        uuid.UUID
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	Name      string
+}
+
 type Book struct {
 	ID        uuid.UUID
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	Title     string
 	PubDate   sql.NullTime
+}
+
+type Refreshtoken struct {
+	ID         uuid.UUID
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+	UserID     uuid.UUID
+	Token      string
+	ValidUntil time.Time
+	RevokedAt  sql.NullTime
 }
 
 type User struct {

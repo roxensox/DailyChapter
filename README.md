@@ -132,6 +132,19 @@ Endpoint to change user progress in a book
 |updated_at  |Timestamp  | No       |
 |name        |Text       | No       |
 
+### Refresh tokens table
+- [x] Fully Implemented
+
+| Field      | Data Type | Nullable |
+|------------|:----------|:--------:|
+|id          |UUID       | No       |
+|created_at  |Timestamp  | No       |
+|updated_at  |Timestamp  | No       |
+|user_id     |UUID       | No
+|token       |Text       | No       |
+|valid_until |Timestamp  | No       |
+|revoked_at  |Timestamp  | Yes      |
+
 ### Chapters table
 - [ ] Fully Implemented
 
