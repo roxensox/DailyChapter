@@ -1,8 +1,19 @@
 # DailyChapter - Server
 ## Overview
-This project is the back-end for the DailyChapter app, which encourages users to read a chapter (or other specified amount) of a book each day. Reads in from a library of public domain books and feeds users a chapter of their selected book via the app, or if they don't log in to read it, via email. Will provide AI generated comprehension questions after each section is completed as a requirement to mark the chapter complete. Not for user deployment, but left public for portfolio.
+DailyChapter is a backend web service written in Go that powers daily reading and subscription-based book tracking.
+It exposes a modular REST API for user registration, authentication, and reading progress management.
+The system uses SQLC to generate type-safe database queries from SQL definitions and PostgreSQL for persistence.
 
 This documentation is just a roadmap for how I plan to build the project, and will be updated as portions are completed.
+
+Core features include:
+	•	JWT-based access and refresh token authentication
+	•	Clean, layered architecture (api, auth, database, utils)
+	•	Type-safe SQLC query generation
+	•	Environment-based secret and API key management
+	•	Lightweight, performant design using Go’s standard library
+
+Tech stack: Go · SQLC · PostgreSQL · REST API · JWT · Modular Architecture
 
 ## Endpoints
 ### Status
